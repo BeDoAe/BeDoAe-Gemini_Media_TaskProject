@@ -1,0 +1,40 @@
+﻿@model TaskProject.ViewModels.Tasks.Tasks_ProjectsViewModel
+
+<h2>Edit Task</h2>
+
+<form asp-action="Update" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Task.TaskId" />
+
+    <div class="form-group">
+        <label asp-for="Task.ProjectId">Project</label>
+        <select asp-for="Task.ProjectId" class="form-control" asp-items="@(new SelectList(Model.Projects, "ProjectId", "ProjectName"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Task.TaskName">Task Name</label>
+        <input asp-for="Task.TaskName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Task.TaskDescription">Description</label>
+        <input asp-for="Task.TaskDescription" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Task.TaskDueDate">Due Date</label>
+        <input asp-for="Task.TaskDueDate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="NewAttachment">New Attachment</label>
+        <input type="file" id="NewAttachment" name="NewAttachment" class="form-control-file" />
+        @if (!string.IsNullOrEmpty(Model.Task.TaskAttachment))
+        {
+            <p>Current Attachment: <a href="@Model.Task.TaskAttachment" target="_blank">View</a></p>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<a asp-action="AllTasks" class="btn btn-secondary">Back to List</a>

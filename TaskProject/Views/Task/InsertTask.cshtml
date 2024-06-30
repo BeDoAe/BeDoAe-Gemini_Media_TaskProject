@@ -1,0 +1,77 @@
+﻿@model TaskProject.ViewModels.Tasks.Tasks_Project_FormFile_ViewModel
+
+<h2>Create New Task</h2>
+
+<form asp-action="Insert" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="TaskFormFile.FormFile_TaskName"></label>
+        <input asp-for="TaskFormFile.FormFile_TaskName" class="form-control" />
+        <span asp-validation-for="TaskFormFile.FormFile_TaskName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TaskFormFile.FormFile_TaskDescription"></label>
+        <input asp-for="TaskFormFile.FormFile_TaskDescription" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="TaskFormFile.FormFile_TaskDueDate"></label>
+        <input asp-for="TaskFormFile.FormFile_TaskDueDate" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="TaskFormFile.FormFile_TaskAttachment"></label>
+        <input asp-for="TaskFormFile.FormFile_TaskAttachment" class="form-control" type="file" />
+    </div>
+    <div class="form-group">
+        <label for="SelectedProjectId">Project</label>
+        <select asp-for="TaskFormFile.FormFile_ProjectId" class="form-control">
+            @foreach (var project in Model.Projects)
+            {
+                <option value="@project.ProjectId">@project.ProjectName</option>
+            }
+        </select>
+    </div>
+    <div>
+        <h4>Subtasks</h4>
+        <ul id="subtasks-list">
+            <!-- Subtasks will be added here dynamically -->
+        </ul>
+        <button type="button" class="btn btn-info" onclick="addSubtask()">Add Subtask</button>
+    </div>
+
+    <button type="submit" class="btn btn-primary" onclick="return validateForm()">Create</button>
+</form>
+
+<a asp-action="AllTasks" class="btn btn-secondary">Back to List</a>
+
+@section Scripts {
+    <script>
+        function addSubtask() {
+            var subtaskIndex = document.querySelectorAll('#subtasks-list li').length;
+            var subtaskHtml = `
+                                <li>
+                                    <div class="form-group">
+                                        <label for="TaskFormFile_FormFile_TaskSubtasks_${subtaskIndex}__SubTaskName">Subtask Name</label>
+                                        <input type="text" name="TaskFormFile.FormFile_TaskSubtasks[${subtaskIndex}].SubTaskName" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="TaskFormFile_FormFile_TaskSubtasks_${subtaskIndex}__SubTaskDescription">Subtask Description</label>
+                                        <input type="text" name="TaskFormFile.FormFile_TaskSubtasks[${subtaskIndex}].SubTaskDescription" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="TaskFormFile_FormFile_TaskSubtasks_${subtaskIndex}__SubTaskDueDate">Subtask Due Date</label>
+                                        <input type="date" name="TaskFormFile.FormFile_TaskSubtasks[${subtaskIndex}].SubTaskDueDate" class="form-control" />
+                                    </div>
+                                </li>
+                            `;
+            document.getElementById('subtasks-list').insertAdjacentHTML('beforeend', subtaskHtml);
+        }
+
+        function validateForm() {
+            var subtaskCount = document.querySelectorAll('#subtasks-list li').length;
+            if (subtaskCount === 0) {
+                alert('Please add at least one subtask.');
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

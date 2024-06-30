@@ -1,0 +1,30 @@
+﻿@model TaskProject.ViewModels.Tasks.TaskViewModel
+
+<h2>Task Details</h2>
+
+<div>
+    <h3>@Model.TaskName</h3>
+    <p>@Model.TaskDescription</p>
+    <p>@Model.TaskDueDate?.ToShortDateString()</p>
+    <p>@Model.TaskAttachment</p>
+</div>
+
+<h4>Subtasks</h4>
+@if (Model.TaskSubtasks != null && Model.TaskSubtasks.Any())
+{
+    <ul>
+        @foreach (var subtask in Model.TaskSubtasks)
+        {
+            <li>
+                <strong>Name:</strong> @subtask.SubTaskName <br />
+                <strong>Description:</strong> @subtask.SubTaskDescription <br />
+                <strong>Due Date:</strong> @subtask.SubTaskDueDate?.ToShortDateString()
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No subtasks available.</p>
+}
+<a asp-action="AllTasks" class="btn btn-secondary">Back to All Tasks</a>

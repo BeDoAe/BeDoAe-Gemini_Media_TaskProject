@@ -1,0 +1,23 @@
+﻿@model TaskProject.ViewModels.Tasks.Tasks_ProjectsViewModel
+
+<h2>Assign Task to Project</h2>
+
+<form asp-action="Assign" method="post">
+    <div class="form-group">
+        <label asp-for="Task.TaskId"></label>
+        <input asp-for="Task.TaskName" class="form-control" readonly />
+        <input type="hidden" asp-for="Task.TaskId" name="taskId" />
+    </div>
+    <div class="form-group">
+        <label for="projectId">Project</label>
+        <select id="projectId" name="projectId" class="form-control">
+            @foreach (var project in Model.Projects)
+            {
+                <option value="@project.ProjectId">@project.ProjectName</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Assign</button>
+</form>
+
+<a asp-action="AllTasks" class="btn btn-secondary">Back to List</a>

@@ -1,0 +1,18 @@
+﻿@model TaskProject.ViewModels.Tasks.TaskViewModel
+
+<h2>Delete Task</h2>
+
+<h4>Are you sure you want to delete this task?</h4>
+<div>
+    <h4>@Model.TaskName</h4>
+    <p>@Model.TaskDescription</p>
+    <p>@Model?.TaskDueDate?.ToShortDateString()</p>
+    <p>@Model?.TaskAttachment</p>
+
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="TaskId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="AllTasks" class="btn btn-secondary">Cancel</a>
+</form>
