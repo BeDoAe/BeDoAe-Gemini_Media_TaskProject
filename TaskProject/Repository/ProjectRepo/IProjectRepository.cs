@@ -9,6 +9,9 @@
         //public  void DeleteProject(int id);
         public  Task<bool> DeleteProject(int id);
 
+        public Task<bool> DeleteProjectWithStoredProcedure(int projectId);
+
+
 
 
     }

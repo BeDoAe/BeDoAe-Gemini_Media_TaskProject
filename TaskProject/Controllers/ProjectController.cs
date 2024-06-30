@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskProject.Helpers;
 using TaskProject.Service.Project;
 using TaskProject.ViewModels.Project;
@@ -20,11 +21,13 @@ namespace TaskProject.Controllers
             var projects = await unitOfWork.ProjectService.GetAllProjects();
             return View("Index",projects);
         }
-       // /Project/Create
+        // /Project/Create
+        [Authorize(Roles ="Admin")]
         public IActionResult Create()
       {
             return View("CreateProject");
         }
+        [Authorize(Roles = "Admin")]
 
         [HttpPost]
         public IActionResult Create(ProjectViewModel projectViewModel)
@@ -37,6 +40,8 @@ namespace TaskProject.Controllers
             }
             return View("Not_Found");
         }
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Edit(int id)
         {
             var project = await unitOfWork.ProjectService.GetSpecificProject(id);
@@ -46,25 +51,25 @@ namespace TaskProject.Controllers
             }
             return View("Edit_Project", project);
         }
+        [Authorize(Roles = "Admin")]
 
         [HttpPost]
         public async Task<IActionResult> Edit(ProjectViewModel projectViewModel)
         {
             if (ModelState.IsValid)
             {
-                // Assuming your unitOfWork.ProjectService.UpdateProject method updates the project details
                 await unitOfWork.ProjectService.UpdateProject(projectViewModel);
-                 unitOfWork.Save(); // Assuming SaveAsync() is an asynchronous save method
+                 unitOfWork.Save();
 
                 return RedirectToAction("Index");
             }
 
-            // If ModelState is not valid, return to the Edit_Project view with the projectViewModel to display validation errors
             return View("Edit_Project", projectViewModel);
         }
 
 
-       
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Delete(int id)
         {
             var project = await unitOfWork.ProjectService.GetSpecificProject(id);
@@ -75,11 +80,17 @@ namespace TaskProject.Controllers
             return View("Delete_Project", project);
         }
 
+        [Authorize(Roles = "Admin")]
+
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int ProjectId)
         {
-          bool result=  await unitOfWork.ProjectRepository.DeleteProject(ProjectId); // Ensure async deletion
-             unitOfWork.Save(); // Ensure async save
+            bool result = await unitOfWork.ProjectRepository.DeleteProject(ProjectId);
+            if (!result)
+            {
+                return View("Not_Found");
+            }
+            unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
     }

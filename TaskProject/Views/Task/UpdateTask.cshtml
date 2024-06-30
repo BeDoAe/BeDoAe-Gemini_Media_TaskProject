@@ -8,21 +8,25 @@
     <div class="form-group">
         <label asp-for="Task.ProjectId">Project</label>
         <select asp-for="Task.ProjectId" class="form-control" asp-items="@(new SelectList(Model.Projects, "ProjectId", "ProjectName"))"></select>
+        <span asp-validation-for="Task.ProjectId" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Task.TaskName">Task Name</label>
         <input asp-for="Task.TaskName" class="form-control" />
+        <span asp-validation-for="Task.TaskName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Task.TaskDescription">Description</label>
         <input asp-for="Task.TaskDescription" class="form-control" />
+        <span asp-validation-for="Task.TaskDescription" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Task.TaskDueDate">Due Date</label>
         <input asp-for="Task.TaskDueDate" class="form-control" />
+        <span asp-validation-for="Task.TaskDueDate" class="text-danger"></span>
     </div>
 
     <div class="form-group">

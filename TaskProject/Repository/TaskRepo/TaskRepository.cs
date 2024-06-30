@@ -26,7 +26,23 @@ namespace TaskProject.Repository.TaskRepo
             return tasks;
         }
 
-  
+        public async Task< List<ApplicationUser>> GetUsersOfTask(int taskID)
+        {
+            List<ApplicationUser> applicationUsers = await context
+                .UserTasks
+                .Where(ut=>ut.TaskId == taskID)
+                .Select(ut=>ut.User)
+                .ToListAsync();
+            return applicationUsers;
+        }
+        public async Task<List<Task>> GetTasksByUserId(string userId)
+        {
+            List < Task > tasks= await context.Tasks
+                .Where(t => t.UserTasks.Any(ut => ut.UserId == userId))
+                .ToListAsync();
+            return tasks;
+        }
+
         public async Task<Task> GetSpecificAsync(int id)
         {
             return await context.Tasks
@@ -36,20 +52,7 @@ namespace TaskProject.Repository.TaskRepo
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        //public async Task<bool> DeleteTask(int id)
-        //{
-        //    Task task = await GetSpecificAsync(id);
-        //    if (task != null)
-        //    {
-        //        task.IsDeleted = true;
-        //        foreach (var t in task.Subtasks)
-        //        { t.IsDeleted = true; }
-        //        context.Tasks.Remove(task);
-        //        //await context.SaveChangesAsync(); // Ensure changes are saved asynchronously
-        //        return true;
-        //    }
-        //    return false;
-        //}
+      
 
         public async Task<bool> DeleteTask(int taskId)
         {
@@ -60,6 +63,14 @@ namespace TaskProject.Repository.TaskRepo
             if (task != null)
             {
                 task.IsDeleted = true;
+                //Delete userTask as well many-many table
+              List<UserTasks> usertasks = await context.UserTasks
+                    .Where(ut => ut.TaskId == taskId)
+                    .ToListAsync();
+                foreach (var ut in usertasks)
+                {
+                    ut.IsDeleted =true;
+                }
 
                 // Mark all related Subtasks as deleted
                 if (task.Subtasks != null)

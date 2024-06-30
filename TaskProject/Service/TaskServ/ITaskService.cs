@@ -16,6 +16,7 @@ namespace TaskProject.Service.TaskServ
 
         public Task<bool> AssignTask(TaskViewModel taskViewModel, int ProjectId);
 
+        public Task<List<TaskViewModel>> GetTasksByUserId(string userId);
 
     }
 }

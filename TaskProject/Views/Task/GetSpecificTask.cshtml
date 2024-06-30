@@ -1,12 +1,12 @@
 ﻿@model TaskProject.ViewModels.Tasks.TaskViewModel
 
-<h2>Task Details</h2>
+<h2>Task Details :</h2><br /><br />
 
 <div>
-    <h3>@Model.TaskName</h3>
-    <p>@Model.TaskDescription</p>
-    <p>@Model.TaskDueDate?.ToShortDateString()</p>
-    <p>@Model.TaskAttachment</p>
+    <span><b></>Task Name :</b></span> <h3 class="ms-5 mx-2">@Model.TaskName</h3>
+    <span><b>Task Description :</b></span>  <p class="ms-5 mx-2">@Model.TaskDescription</p>
+    <span><b>Task DueDate :</b></span> <p class="ms-5 mx-2">@Model.TaskDueDate?.ToShortDateString()</p>
+    <span><b>Task Attachment :</b></span> <p class="ms-5 mx-2">@Model.TaskAttachment</p>
 </div>
 
 <h4>Subtasks</h4>
@@ -27,4 +27,23 @@ else
 {
     <p>No subtasks available.</p>
 }
+
+<h4>Assigned Users</h4>
+@if (Model.TaskAppUsers != null && Model.TaskAppUsers.Any())
+{
+    <ul>
+        @foreach (var user in Model.TaskAppUsers)
+        {
+            <li>
+                <strong>Username:</strong> @user.UsernameVM <br />
+                <strong>Email:</strong> @user.EmailVM
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No users assigned.</p>
+}
+
 <a asp-action="AllTasks" class="btn btn-secondary">Back to All Tasks</a>

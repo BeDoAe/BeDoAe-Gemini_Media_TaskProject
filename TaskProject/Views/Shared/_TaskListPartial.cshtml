@@ -1,0 +1,23 @@
+﻿@model IEnumerable<TaskProject.ViewModels.Tasks.TaskViewModel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Task ID</th>
+            <th>Task Name</th>
+            <th>Description</th>
+            <th>Due Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model)
+        {
+            <tr>
+                <td>@task.TaskId</td>
+                <td>@task.TaskName</td>
+                <td>@task.TaskDescription</td>
+                <td>@task.TaskDueDate?.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>

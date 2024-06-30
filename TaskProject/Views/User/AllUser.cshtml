@@ -1,0 +1,33 @@
+﻿@model IEnumerable<TaskProject.ViewModels.UserVM.AppUserVM>
+
+@{
+    ViewData["Title"] = "All Users";
+}
+
+<h1>All Users</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UsernameVM</td>
+                <td>@user.FirstNameVM</td>
+                <td>@user.LastNameVM</td>
+                <td>
+                    <a asp-action="SpecificUser" asp-route-id="@user.idVM" class="btn btn-info">Details</a>
+           
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

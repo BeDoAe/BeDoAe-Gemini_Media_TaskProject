@@ -59,7 +59,7 @@ namespace TaskProject.Service.Project
                 {
                     ProjectId = project.Id,
                     ProjectName = project.Name,
-                    ProjectDescription = project.Description, // Consider renaming this to "ProjectDescription" for consistency
+                    ProjectDescription = project.Description,
                     ProjectTasks = project.Tasks.Select(p => new TaskViewModel
                     {
                         TaskId = p.Id,
@@ -95,7 +95,7 @@ namespace TaskProject.Service.Project
                 {
                     ProjectId = project.Id,
                     ProjectName = project.Name,
-                    ProjectDescription = project.Description, // Consider renaming this to "ProjectDescription"
+                    ProjectDescription = project.Description, 
                     ProjectTasks = project.Tasks.Select(p => new TaskViewModel
                     {
                         TaskId = p.Id,
@@ -123,38 +123,7 @@ namespace TaskProject.Service.Project
             return new List<ProjectViewModel>();
         }
 
-        //public async Task< project> UpdateProject(ProjectViewModel projectViewModel)
-        //{
-        //    project project = await projectRepository.GetSpecificAsync(projectViewModel.ProjectId);
-        //    if (project != null)
-        //    {
-
-        //        project.Name = projectViewModel.ProjectName;
-        //        project.Description = projectViewModel.PtojectDescription;
-        //        //project.Tasks = projectViewModel.ProjectTasks.Select(tv => new Task
-        //        //{
-        //        //    Id = tv.TaskId,
-        //        //    Name = tv.TaskName,
-        //        //    Description = tv.TaskDescription,
-        //        //    DueDate = tv.TaskDueDate,
-        //        //    Attachment = tv.TaskAttachment,
-        //        //    Subtasks = tv.TaskSubtasks.Select(stv => new Subtask
-        //        //    {
-        //        //        Name = stv.Name,
-        //        //        Description = stv.Description,
-        //        //        DueDate = stv.DueDate,
-        //        //        TaskId = stv.TaskId,
-
-        //        //    }).ToList()
-        //        //}).ToList();
-
-
-        //    projectRepository.Update(project);
-        //        return project;
-        //    }
-        //    return new project();
-        //}
-
+       
         public async Task<project> UpdateProject(ProjectViewModel projectViewModel)
         {
             project project = await projectRepository.GetSpecificAsync(projectViewModel.ProjectId);
@@ -168,7 +137,7 @@ namespace TaskProject.Service.Project
                 return project;
             }
 
-            return null; // Consider handling this case appropriately in your controller
+            return null; 
         }
 
 

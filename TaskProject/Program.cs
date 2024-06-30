@@ -3,10 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Numerics;
 using TaskProject.Helpers;
+using TaskProject.Repository.DueDateRepo;
 using TaskProject.Repository.ProjectRepo;
 using TaskProject.Repository.TaskRepo;
+using TaskProject.Repository.UserRepo;
 using TaskProject.Service.Project;
 using TaskProject.Service.TaskServ;
+using TaskProject.Service.UserServ;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +21,6 @@ builder.Services.AddSession(
               {
                   options.IdleTimeout = TimeSpan.FromMinutes(30);
               });//setting middleware
-
 
 builder.Services.AddDbContext<Context>(
     options => {
@@ -38,6 +41,9 @@ builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IDueDateRepository , DueDateRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
@@ -63,5 +69,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllers(); // Enable attribute routing for API controllers
 
 app.Run();

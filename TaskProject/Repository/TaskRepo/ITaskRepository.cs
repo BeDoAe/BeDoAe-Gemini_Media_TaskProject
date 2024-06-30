@@ -13,5 +13,11 @@ namespace TaskProject.Repository.TaskRepo
 
         public  Task<bool> InsertTaskAsync(Task task);
 
+        public Task<List<ApplicationUser>> GetUsersOfTask(int taskID);
+
+        public Task<List<Task>> GetTasksByUserId(string userId);
+
+
+
     }
 }

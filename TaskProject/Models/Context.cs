@@ -3,19 +3,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TaskProject.Models
 {
-     public class Context : IdentityDbContext<ApplicationUser>
+    public class Context : IdentityDbContext<ApplicationUser>
+    {
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Task> Tasks { get; set; }
+        public DbSet<Subtask> Subtasks { get; set; }
+        public DbSet<UserTasks> UserTasks { get; set; }
+
+        public Context(DbContextOptions<Context> options)
+            : base(options)
         {
-            public DbSet<Project> Projects { get; set; }
-            public DbSet<Task> Tasks { get; set; }
-            public DbSet<Subtask> Subtasks { get; set; }
-            public DbSet<UserTasks> UserTasks { get; set; }
+        }
 
-            public Context(DbContextOptions<Context> options)
-                : base(options)
-            {
-            }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+       
+           protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 

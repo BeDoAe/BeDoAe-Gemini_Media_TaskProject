@@ -1,0 +1,73 @@
+﻿@model TaskProject.ViewModels.UserVM.Task_AppUser_VM
+
+@{
+    ViewData["Title"] = "Specific User";
+}
+
+<h1>Specific User</h1>
+
+<div>
+    <h4>User Details</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.appUserVMs.UsernameVM)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.appUserVMs.UsernameVM)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.appUserVMs.FirstNameVM)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.appUserVMs.FirstNameVM)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.appUserVMs.LastNameVM)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.appUserVMs.LastNameVM)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.appUserVMs.EmailVM)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.appUserVMs.EmailVM)</dd>
+    </dl>
+</div>
+
+<div>
+    <h4>User Tasks</h4>
+    <hr />
+    @if (Model.appUserVMs.UserTasksVM != null && Model.appUserVMs.UserTasksVM.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Task ID</th>
+                    <th>Task Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model.appUserVMs.UserTasksVM)
+                {
+                    <tr>
+                        <td>@task.TaskIdVM</td>
+                        <td>@task.TaskNameVM</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No tasks assigned.</p>
+    }
+</div>
+
+<div>
+    <h4>Assign Task</h4>
+    <hr />
+    <form asp-action="AssignTask" method="post">
+        <input type="hidden" name="id" value="@Model.appUserVMs.idVM" />
+        <div class="form-group">
+            <label for="taskId">Select Task</label>
+            <select name="taskId" class="form-control" id="taskId">
+                @foreach (var task in Model.taskViewModels)
+                {
+                    <option value="@task.TaskId">@task.TaskName</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Assign Task</button>
+    </form>
+</div>
+
+<div>
+    <a asp-action="AllUser">Back to List</a>
+</div>

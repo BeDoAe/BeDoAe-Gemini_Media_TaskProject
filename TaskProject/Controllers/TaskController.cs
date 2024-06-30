@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using TaskProject.Helpers;
 using TaskProject.Models;
@@ -34,6 +35,7 @@ namespace TaskProject.Controllers
             }
             return View("GetSpecificTask", task);
         }
+        [Authorize(Roles = "Admin")]
 
         [HttpGet]
         public async Task<IActionResult> Update(int id)
@@ -65,6 +67,7 @@ namespace TaskProject.Controllers
             return View("UpdateTask", viewModel);
         }
 
+        [Authorize(Roles = "Admin")]
 
         [HttpPost]
         public async Task<IActionResult> Update(Tasks_ProjectsViewModel viewModel, IFormFile newAttachment)
@@ -77,14 +80,14 @@ namespace TaskProject.Controllers
                     return NotFound();
                 }
 
-                //updatedTask.ProjectId = viewModel.Task.ProjectId;
-                //updatedTask.TaskName = viewModel.Task.TaskName;
-                //updatedTask.TaskDescription = viewModel.Task.TaskDescription;
-                //updatedTask.TaskDueDate = viewModel.Task.TaskDueDate;
+                // Update task properties
+                updatedTask.ProjectId = viewModel.Task.ProjectId;
+                updatedTask.TaskName = viewModel.Task.TaskName;
+                updatedTask.TaskDescription = viewModel.Task.TaskDescription;
+                updatedTask.TaskDueDate = viewModel.Task.TaskDueDate;
 
                 if (newAttachment != null && newAttachment.Length > 0)
                 {
-                    // Save the new attachment and update the task's attachment property
                     updatedTask.TaskAttachment = await FileHelper.SaveFileAsync(newAttachment);
                 }
 
@@ -94,7 +97,6 @@ namespace TaskProject.Controllers
                 return RedirectToAction(nameof(AllTasks));
             }
 
-            // If ModelState is not valid, reload projects and return the view with errors
             var projects = await unitOfWork.ProjectService.GetAllProjects();
             viewModel.Projects = projects.Select(p => new TaskProjectViewModel
             {
@@ -106,37 +108,8 @@ namespace TaskProject.Controllers
         }
 
 
-        // Update Task        /Task/update/
-        //[HttpGet]
-        //public async Task<IActionResult> Update(int id)
-        //{
-        //    var task = await unitOfWork.TaskService.GetSpecificTask(id);
-        //    if (task == null)
-        //    {
-        //        return View("~/Views/Project/Not_Found.cshtml");
-        //    }
-        //    var projects = await unitOfWork.ProjectService.GetAllProjects();
-        //    var viewModel = new Tasks_ProjectsViewModel
-        //    {
-        //        Task = new TaskViewModel
-        //        {
-        //            ProjectId = task.ProjectId,
-        //            TaskId = task.TaskId,
-        //            TaskName = task.TaskName,
-        //            TaskDescription = task.TaskDescription,
-        //            TaskDueDate = task.TaskDueDate,
-        //            TaskAttachment = task.TaskAttachment
-        //        },
-        //        Projects = projects.Select(p => new TaskProjectViewModel
-        //        {
-        //            ProjectId = p.ProjectId,
-        //            ProjectName = p.ProjectName
-        //        }).ToList()
-        //    };
+        [Authorize(Roles = "Admin")]
 
-        //    return View("UpdateTask", viewModel);
-
-        // Delete Task
         public async Task<IActionResult> Delete(int id)
         {
             var task = await unitOfWork.TaskService.GetSpecificTask(id);
@@ -147,6 +120,7 @@ namespace TaskProject.Controllers
             return View("DeleteTask", task);
 
         }
+        [Authorize(Roles = "Admin")]
 
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int taskId)
@@ -196,6 +170,7 @@ namespace TaskProject.Controllers
         }
 
         // Insert Task  /Task/Insert
+        [Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> Insert()
         {
@@ -213,6 +188,7 @@ namespace TaskProject.Controllers
             return View("InsertTask", viewModel);
         }
 
+        [Authorize(Roles = "Admin")]
 
         [HttpPost]
         public async Task<IActionResult> Insert(Tasks_Project_FormFile_ViewModel  tasks_Project_FormFile_ViewModel)
@@ -236,43 +212,7 @@ namespace TaskProject.Controllers
             return View("InsertTask", tasks_Project_FormFile_ViewModel);
         }
 
-        //public async Task<IActionResult> Insert()
-        //{
-        //    var projects = await unitOfWork.ProjectService.GetAllProjects();
-        //    var viewModel = new Tasks_ProjectsViewModel
-        //    {
-        //        Task = new TaskViewModel(),
-        //        Projects = projects.Select(p => new TaskProjectViewModel
-        //        {
-        //            ProjectId = p.ProjectId,
-        //            ProjectName = p.ProjectName
-        //        }).ToList()
-        //    };
-
-        //    return View("InsertTask", viewModel);
-        //}
-
-        //[HttpPost]
-        //public IActionResult Insert(Tasks_ProjectsViewModel viewModel)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        unitOfWork.TaskService.InsertTask(viewModel.Task);
-        //        unitOfWork.Save();
-
-        //        return RedirectToAction(nameof(AllTasks));
-        //    }
-
-        //    // Reload the projects list in case of validation failure
-        //    var projects = unitOfWork.ProjectService.GetAllProjects().Result;
-        //    viewModel.Projects = projects.Select(p => new TaskProjectViewModel
-        //    {
-        //        ProjectId = p.ProjectId,
-        //        ProjectName = p.ProjectName
-        //    }).ToList();
-
-        //    return View("InsertTask", viewModel);
-        //}
+        
 
     }
 }

@@ -8,6 +8,7 @@ using TaskProject.Service.Project;
 using TaskProject.ViewModels.Project;
 using TaskProject.ViewModels.SubTask;
 using TaskProject.ViewModels.Tasks;
+using TaskProject.ViewModels.UserVM;
 using Task = TaskProject.Models.Task;
 
 
@@ -49,34 +50,13 @@ namespace TaskProject.Service.TaskServ
 
 
 
-        //public void InsertTask(TaskViewModel taskViewModel)
-        //{
-
-        //    Task t = new Task
-        //    {
-        //        Name = taskViewModel.TaskName,
-        //        Description = taskViewModel.TaskDescription,
-        //        Attachment= taskViewModel.TaskAttachment,
-        //        DueDate = taskViewModel.TaskDueDate,
-        //        ProjectId = taskViewModel.ProjectId,
-        //        Subtasks = taskViewModel.TaskSubtasks.Select(p => new Subtask
-        //        {
-        //            Id = p.SubTaskId,
-        //            Description = p.SubTaskDescription,
-        //            DueDate = p.SubTaskDueDate,
-        //            Name = p.SubTaskName,
-
-
-        //        }).ToList()
-        //    };
-
-        //    taskRepository.Insert(t);
-        //}
 
         public async Task<TaskViewModel> GetSpecificTask(int id)
         {
             Task task = await taskRepository.GetSpecificAsync(id);
-            if (task != null)
+            List<ApplicationUser> users = await taskRepository.GetUsersOfTask(id);
+
+            if (task != null || users != null)
             {
                 TaskViewModel taskViewModel = new TaskViewModel
                 {
@@ -92,6 +72,15 @@ namespace TaskProject.Service.TaskServ
                         SubTaskDueDate = p.DueDate,
                         SubTaskName = p.Name,
                         
+                    }).ToList()
+                    ,TaskAppUsers= users.Select(u=>new AppUserVM
+                    {
+                        idVM = u.Id,
+                        UsernameVM=u.UserName,
+                        FirstNameVM=u.FirstName,
+                        LastNameVM=u.LastName,
+                        EmailVM=u.Email,
+                  
                     }).ToList()
                 };
                 return taskViewModel;
@@ -138,7 +127,8 @@ namespace TaskProject.Service.TaskServ
         public async Task<Task> UpdateTask(TaskViewModel taskViewModel)
         {
             Task task = await taskRepository.GetSpecificAsync(taskViewModel.TaskId);
-            if (task != null)
+
+            if (task != null )
             {
                 task.Name = taskViewModel.TaskName;
                 task.Description = taskViewModel.TaskDescription;
@@ -169,9 +159,30 @@ namespace TaskProject.Service.TaskServ
             return false;
         }
 
+        public async Task<bool> AssignUserTask(int TaskID, string UserId)
+        {
+            Task task = await taskRepository.GetSpecificAsync(TaskID);
+            //ApplicationUser applicationUser = 
+            if (task != null)
+            {
 
 
+                return true;
+            }
+            return false;
+        }
 
+        public async Task<List<TaskViewModel>> GetTasksByUserId(string userId)
+        {
+            var tasks = await taskRepository.GetTasksByUserId(userId);
+            return tasks.Select(t => new TaskViewModel
+            {
+                TaskId = t.Id,
+                TaskName = t.Name,
+                TaskDescription = t.Description,
+                TaskDueDate = t.DueDate
+            }).ToList();
+        }
     }
 }
 

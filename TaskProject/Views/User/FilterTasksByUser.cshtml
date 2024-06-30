@@ -1,0 +1,45 @@
+﻿@model IEnumerable<TaskProject.ViewModels.UserVM.AppUserVM>
+
+@{
+    ViewData["Title"] = "Filter Tasks by User";
+}
+
+<h1>Filter Tasks by User</h1>
+
+<div>
+    <label for="userSelect">Select User:</label>
+    <select id="userSelect" class="form-control">
+        <option value="">-- Select User --</option>
+        @foreach (var user in Model)
+        {
+            <option value="@user.idVM">@user.UsernameVM</option>
+        }
+    </select>
+</div>
+
+<div id="taskList">
+    <!-- Task list will be loaded here -->
+</div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#userSelect').change(function () {
+                var userId = $(this).val();
+                if (userId) {
+                    $.ajax({
+                        url: '@Url.Action("FilterTasksByUserAction", "User")',
+                        type: 'GET',
+                        data: { userId: userId },
+                        success: function (data) {
+                            $('#taskList').html(data);
+                        }
+                    });
+                } else {
+                    $('#taskList').empty();
+                }
+            });
+        });
+    </script>
+}
